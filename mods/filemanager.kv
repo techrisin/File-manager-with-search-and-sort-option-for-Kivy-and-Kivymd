@@ -1,0 +1,264 @@
+#:import os os
+
+<MDFileManagerItem>
+    # canvas.before:
+    #     Color:
+    #         rgba : 1, 0, 0,1
+    icon: "folder"
+    path: ""
+    # background_normal: ""
+    # background_down: ""
+    dir_or_file_name: ""
+    # md_bg_color: app.theme_cls.surfaceColor
+    theme_bg_color : "Custom"
+    md_bg_color: 0.4941,0.3019,0.4863,1 # self.theme_cls.backgroundColor  0.4941,0.3019,0.4863,1
+    icon_color: 1, 1, 1, 1
+    _selected: False
+    on_release: root.events_callback(root.path, root)
+    
+    
+
+    MDListItemLeadingIcon:
+        icon: root.icon
+        theme_icon_color: "Custom"
+        icon_color: root.icon_color
+
+    MDListItemSupportingText:
+        text: root.dir_or_file_name
+        theme_text_color: 'Custom'
+        text_color: 1,1,1,1
+
+<Check@MDCheckbox>:
+    group: 'group'
+    size_hint: None, None
+    size: dp(48), dp(48)
+    radio_icon_normal : "radiobox-blank"
+    radio_icon_down : "radiobox-marked"
+
+<MDFileManagerItemPreview>
+    name: ""
+    path: ""
+    realpath: ""
+    type: "folder"
+    events_callback: lambda x: None
+    _selected: False
+    orientation: "vertical"
+    size_hint_y: None
+    height: root.height
+    padding: "20dp"
+    spacing: "12dp"
+    custext : ""
+    MDFileManagerThumbnail:
+        mipmap: True
+        source: root.path
+        fit_mode : "fill"
+        on_release:
+            root.events_callback( \
+            os.path.join(root.path if root.type != "folder" \
+            else root.realpath, root.name), root)
+
+    MDLabel:
+        text: os.path.split(root.name)[1]
+        adaptive_height: True
+        shorten: True
+        shorten_from: "right"
+        halign: "center"
+        text_size: self.width, None
+        size_hint_y : 0.1
+        theme_text_color: "Custom"
+        text_color: 1,1,1,1   
+
+    MDFloatLayout:
+        # MDLabel:
+        #     text: "VV"
+        #     adaptive_height: True
+        #     shorten: True
+        #     shorten_from: "center"
+        #     x : root.x 
+        #     y : root.top - 20
+        #     halign: "center"
+        #     valign: "center"
+        #     text_size: self.width, None
+        size_hint_y : 0.1
+        MDIcon:
+            icon: ""
+            id : fortick
+            x : root.x 
+            y : root.top - 20 
+            theme_text_color: "Custom"
+            text_color: 1,1,1,1         
+
+
+<MDFileManager>
+    canvas:
+        Color:
+            rgba: 0.4941,0.3019,0.4863,1 #self.theme_cls.backgroundColor  1,0,0,1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    background_color_selection_button : 1,1,1,1
+    icon_color: 1, 1, 1, 1
+
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(5)
+        
+        MDBoxLayout:
+            adaptive_height : True
+            
+            MDTopAppBar:
+                type: "small"
+                adaptive_height : True
+                id: toolbar
+                theme_bg_color : "Custom"
+                md_bg_color: 0.4941,0.3019,0.4863,1
+                    # app.theme_cls.surfaceColor \
+                    # if not root.background_color_toolbar else \
+                    # root.background_color_toolbar
+
+                MDTopAppBarLeadingButtonContainer:
+                    padding: "5dp", 0, 0, 0
+
+                    MDActionTopAppBarButton:
+                        icon: "chevron-left"
+                        on_release: root.back()
+                        # theme_bg_color : "Custom"
+                        # md_bg_color: 0.4941,0.3019,0.4863,1
+                        theme_font_size: "Custom"
+                        font_size: "20sp"
+                        # style : "outlined"
+                        # text_color : "white"
+                        # theme_text_color: "Custom"
+                        # text_color: 1,1,1,1
+                        theme_icon_color: "Custom"
+                        icon_color: 1, 1, 1, 1
+
+                MDTopAppBarTitle:
+                    text: root.current_path if len(str(root.current_path)) < 20 else ".." + str(root.current_path)[len(str(root.current_path))-20:]
+                    text_color : "white"
+                    theme_font_size: "Custom"
+                    font_size: "18sp"
+                    halign : "right"
+                MDTopAppBarTrailingButtonContainer:
+                    MDActionTopAppBarButton:
+                        icon: "close-box"
+                        on_release: root.exit_manager(1)
+                        theme_icon_color: "Custom"
+                        icon_color: 1, 1, 1, 1
+
+            MDFloatLayout:
+                size_hint_x : 0.1
+                MDLabel:
+                    id : selectedcount
+                    # adaptive_width: True
+                    halign : "center"
+                    text: "0"
+                    text_color : "white"
+                    pos_hint : {"center_x": .5, "center_y": .5}
+                MDIconButton:
+                    halign: "center"
+                    # valign: "center"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    icon: ""
+                    on_press: root.clearselection()
+        MDBoxLayout:
+            adaptive_height : True
+            MDTextField:
+                id : searchtext
+                mode: "outlined" # outlined filled
+                theme_line_color: "Custom"
+                line_color_normal: "white"
+                line_color_focus: "white"
+                theme_text_color: "Custom"
+                text_color_focus: "white"
+                on_text: root.textchange(self.text)
+                # app.theme_cls.primaryColor = 1,0,0,1
+                # theme_bg_color: "Custom"
+                # fill_color_normal: 0.4941,0.3019,0.4863,1
+                # x : 0.2
+                MDTextFieldLeadingIcon:
+                    icon: "magnify"
+                    theme_icon_color: "Custom"
+                    icon_color_normal: 1,1,1,1
+                    icon_color_focus: 1,1,1,1
+
+                MDTextFieldHintText:
+                    text: "Search"
+                # MDTextFieldTrailingIcon:
+                #     icon: "refresh"
+                #     on_selection : print('vinayagar')
+            MDIconButton:
+                size_hint_x : 0.1
+                id : cleartext
+                halign: "center"
+                # valign: "center"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                icon: ""
+                theme_icon_color: "Custom"
+                icon_color: 1, 1, 1, 1
+                on_press: root.cleartext() # = True ; # self.cleartext()
+                theme_font_size: "Custom"
+                font_size: "30sp"
+                disabled : True
+
+        MDFloatLayout:
+            size_hint_y : 0.04
+            # padding : 0,"30dp",0,0
+            MDLabel:
+                pos_hint: {'center_x': 0.55, 'center_y': 0}
+                text: "Sort By"
+                text_color : "white"
+        MDBoxLayout:
+            size_hint_y : 0.1
+            MDBoxLayout:
+                # size_hint_x : 0.75
+                Check:
+                    active: True
+                    id : namecheck
+                    pos_hint: {'center_y': .3}
+                    on_press : root.sortbasedon('name')
+                MDLabel:
+                    pos_hint: {'center_y': 0.25}
+                    text: "Name"
+                    text_color : "white"
+                Check:
+                    id : datecheck
+                    pos_hint: {'center_y': .3}
+                    on_press : root.sortbasedon('date')
+                MDLabel:
+                    pos_hint: {'center_y': 0.25}
+                    text: "Date"
+                    text_color : "white"
+                
+            MDBoxLayout:
+                
+                MDLabel:
+                    pos_hint: {'center_y': 0.3}
+                    text: "A-Z "
+                    text_color : "white"
+                    halign : "right"
+                MDSwitch:
+                    id : sortswitch
+                    pos_hint: {'center_x': .8, 'center_y': .3}
+                    track_color_active: 0.5,0.5,0.5,1
+                    on_active : root.sortdirection()
+                MDLabel:
+                    pos_hint: {'center_y': 0.3}
+                    text: " Z-A"
+                    text_color : "white"
+                
+        RecycleView:
+            id: rv
+            key_viewclass: "viewclass"
+            key_size: "height"
+            bar_width: dp(4)
+            bar_color: root.theme_cls.primaryColor
+
+            RecycleGridLayout:
+                padding: "10dp"
+                spacing: "2dp"
+                cols: 3 if root.preview else 1
+                default_size: None, dp(48)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
