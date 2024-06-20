@@ -8,4 +8,4 @@ This is a modified file manager with the following options
 4. choose multiple files
 5. explicit indication of selected files
 
-For more details visit [https://techris.in](https://techris.in)
+For more details visit [https://techris.in/python/file-manager-with-search-and-sort-option-for-kivy-and-kivymd.html](https://techris.in/python/file-manager-with-search-and-sort-option-for-kivy-and-kivymd.html)
